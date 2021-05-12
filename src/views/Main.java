@@ -46,7 +46,7 @@ public class Main {
                     method.deletePhone();
                     break;
                 case "5":
-
+                    method.getPhoneBook();
                     break;
                 case "6":
                     method.getDataInFile();

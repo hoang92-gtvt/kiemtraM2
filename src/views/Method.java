@@ -9,16 +9,16 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Method {
-    private ArrayList<PhoneBook> phoneBooks;
+    private ArrayList<PhoneBook> phoneBooks = new ArrayList<>();
     private Scanner scanner = new Scanner(System.in);
     FileManager<PhoneBook> fileManager = FileManager.getInstance();
     private static final String phoneBookList= "phoneBookList.csv";
-    Manager manager = new Manager();
+    Manager manager = new Manager(phoneBooks);
 
 
 
     public void showPhoneBook(){
-        for (PhoneBook p: phoneBooks
+        for (PhoneBook p: manager.getPhoneBooks()
         ) {
             System.out.println(p);
         }
@@ -89,7 +89,7 @@ public class Method {
         PhoneBook phoneBook=null;
         while (!check){
             String numberPhone = scanner.nextLine();
-            for (PhoneBook p: phoneBooks
+            for (PhoneBook p: manager.getPhoneBooks()
             ) {
                 if(p.getPhoneNumber().equals(numberPhone)){
                     phoneBook = p;
@@ -136,7 +136,7 @@ public class Method {
                     case "6":
                         break;
                     default:
-                        System.err.println("sai tuỳ chọn");
+                        System.err.println("Sai rồi, nhập lại");
                         break;
                 }
             }while (!choose.equals("6"));
@@ -148,6 +148,7 @@ public class Method {
     public void getDataInFile(){
         try {
             phoneBooks= fileManager.readFile(phoneBookList);
+            manager.setPhoneBooks(phoneBooks);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -156,15 +157,30 @@ public class Method {
         if(phoneBooks==null){
             System.out.println("file chưa có dữ liệu!!");
         }
+
     }
     public void saveDataOutFile(){
         try {
-            fileManager.writeFile(phoneBooks,phoneBookList);
+            fileManager.writeFile(manager.getPhoneBooks(), phoneBookList);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+
+    public void getPhoneBook(){
+        System.out.println("mời nhập số điện thoại cần tìm kiếm");
+        String phoneNumber = scanner.nextLine();
+        Boolean check = false;
+        for (PhoneBook c:phoneBooks
+        ) {
+            if(c.getPhoneNumber().contains(phoneNumber)){
+                System.out.println(c);
+                check = true;
+            }
+        }
+        if(!check) System.out.println("số điện thoại ko tồn tại trong thuê bao");
+    }
 
 
 }
